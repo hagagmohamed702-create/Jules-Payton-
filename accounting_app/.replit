@@ -1,0 +1,16 @@
+run = "python manage.py migrate && python manage.py runserver 0.0.0.0:3000"
+
+[env]
+DJANGO_SECRET_KEY = "your-secret-key-here"
+DEBUG = "False"
+
+[nix]
+channel = "stable-22_11"
+
+[nix.pkg]
+deps = [
+  "python311",
+  "python311Packages.pip",
+  "python311Packages.setuptools",
+  "python311Packages.wheel"
+]
