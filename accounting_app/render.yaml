@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: arabic-accounting-system
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python manage.py migrate && python manage.py collectstatic --no-input && gunicorn core.wsgi"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: accounting-db
+          property: connectionString
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false
+      - key: ALLOWED_HOSTS
+        value: .onrender.com
+
+databases:
+  - name: accounting-db
+    plan: free
+    databaseName: accounting
+    user: accounting_user
