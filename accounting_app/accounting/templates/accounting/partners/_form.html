@@ -1,0 +1,86 @@
+<!-- Partner Form Modal -->
+<div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-2xl bg-white">
+        <div class="mt-3">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ title }}</h3>
+            
+            <form method="post" 
+                  hx-post="{% if partner %}{% url 'accounting:partner_edit' partner.pk %}{% else %}{% url 'accounting:partner_create' %}{% endif %}"
+                  hx-target="#partners-table"
+                  hx-swap="innerHTML"
+                  hx-on="htmx:afterRequest: if(event.detail.successful) document.getElementById('modal-container').innerHTML = '';">
+                {% csrf_token %}
+                
+                <div class="space-y-4">
+                    <!-- Code -->
+                    <div>
+                        <label for="{{ form.code.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            {{ form.code.label }}
+                        </label>
+                        {{ form.code }}
+                        {% if form.code.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.code.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Name -->
+                    <div>
+                        <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            {{ form.name.label }}
+                        </label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Share Percent -->
+                    <div>
+                        <label for="{{ form.share_percent.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            {{ form.share_percent.label }}
+                        </label>
+                        {{ form.share_percent }}
+                        {% if form.share_percent.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.share_percent.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Opening Balance -->
+                    <div>
+                        <label for="{{ form.opening_balance.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            {{ form.opening_balance.label }}
+                        </label>
+                        {{ form.opening_balance }}
+                        {% if form.opening_balance.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.opening_balance.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Notes -->
+                    <div>
+                        <label for="{{ form.notes.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            {{ form.notes.label }}
+                        </label>
+                        {{ form.notes }}
+                        {% if form.notes.errors %}
+                            <p class="mt-1 text-sm text-red-600">{{ form.notes.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="flex gap-3 mt-6">
+                    <button type="submit"
+                            class="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                        {% if partner %}تحديث{% else %}إضافة{% endif %}
+                    </button>
+                    <button type="button" 
+                            onclick="document.getElementById('modal-container').innerHTML = '';"
+                            class="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors">
+                        إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

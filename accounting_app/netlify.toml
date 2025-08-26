@@ -1,0 +1,6 @@
+[build]
+  command = "python manage.py collectstatic --noinput && python manage.py migrate"
+  publish = "staticfiles/"
+
+[build.environment]
+  PYTHON_VERSION = "3.11"
