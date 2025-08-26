@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}قائمة الشركاء - نظام المحاسبة{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="bg-white shadow-sm rounded-2xl p-6">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">الشركاء</h1>
+                <p class="text-gray-600 mt-1">إدارة الشركاء ونسب الشراكة</p>
+            </div>
+            <button hx-get="{% url 'accounting:partner_create' %}"
+                    hx-target="#modal-container"
+                    hx-swap="innerHTML"
+                    class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                <svg class="h-5 w-5 inline-block ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+                إضافة شريك جديد
+            </button>
+        </div>
+    </div>
+    
+    <!-- Search and Filters -->
+    <div class="bg-white shadow-sm rounded-2xl p-6">
+        <form method="get" 
+              hx-get="{% url 'accounting:partners_list' %}"
+              hx-target="#partners-table"
+              hx-swap="innerHTML"
+              hx-trigger="submit, keyup delay:500ms from:#search">
+            <div class="flex gap-4">
+                <div class="flex-1">
+                    <input type="text" 
+                           id="search"
+                           name="search" 
+                           value="{{ search_query }}"
+                           placeholder="بحث بالكود أو الاسم..."
+                           class="form-input w-full rounded-lg">
+                </div>
+                <button type="submit" 
+                        class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                    بحث
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Partners Table -->
+    <div class="bg-white shadow-sm rounded-2xl overflow-hidden">
+        <div id="partners-table">
+            {% include 'accounting/partners/_table.html' %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Create/Edit -->
+<div id="partner-modal"></div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Handle row clicks for inline editing
+document.addEventListener('htmx:afterSwap', function(event) {
+    if (event.detail.target.id === 'partners-table') {
+        // Re-attach event handlers to new rows
+        attachRowHandlers();
+    }
+});
+
+function attachRowHandlers() {
+    document.querySelectorAll('[data-partner-row]').forEach(row => {
+        row.addEventListener('click', function(e) {
+            if (!e.target.closest('button')) {
+                const partnerId = this.dataset.partnerRow;
+                htmx.ajax('GET', `/partners/${partnerId}/`, {
+                    target: '#modal-container',
+                    swap: 'innerHTML'
+                });
+            }
+        });
+    });
+}
+
+// Initial attachment
+attachRowHandlers();
+</script>
+{% endblock %}

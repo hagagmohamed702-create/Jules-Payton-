@@ -1,0 +1,144 @@
+from django.contrib import admin
+from django.utils.html import format_html
+from .models import (
+    Partner, PartnersGroup, PartnersGroupMember,
+    Safe, Customer, Supplier, Unit, Contract,
+    Installment, ReceiptVoucher, PaymentVoucher,
+    Project, Item, StockMove, Settlement
+)
+
+
+@admin.register(Partner)
+class PartnerAdmin(admin.ModelAdmin):
+    list_display = ['code', 'name', 'share_percent', 'opening_balance', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['code', 'name']
+    ordering = ['code']
+
+
+class PartnersGroupMemberInline(admin.TabularInline):
+    model = PartnersGroupMember
+    extra = 1
+
+
+@admin.register(PartnersGroup)
+class PartnersGroupAdmin(admin.ModelAdmin):
+    list_display = ['name', 'created_at']
+    inlines = [PartnersGroupMemberInline]
+    search_fields = ['name']
+
+
+@admin.register(Safe)
+class SafeAdmin(admin.ModelAdmin):
+    list_display = ['name', 'is_partner_wallet', 'partner', 'created_at']
+    list_filter = ['is_partner_wallet', 'created_at']
+    search_fields = ['name']
+
+
+@admin.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ['code', 'name', 'phone', 'is_active', 'created_at']
+    list_filter = ['is_active', 'created_at']
+    search_fields = ['code', 'name', 'phone']
+    ordering = ['code']
+
+
+@admin.register(Supplier)
+class SupplierAdmin(admin.ModelAdmin):
+    list_display = ['name', 'phone', 'created_at']
+    search_fields = ['name', 'phone']
+    ordering = ['name']
+
+
+@admin.register(Unit)
+class UnitAdmin(admin.ModelAdmin):
+    list_display = ['code', 'name', 'unit_type', 'price_total', 'is_sold', 'created_at']
+    list_filter = ['unit_type', 'is_sold', 'group', 'created_at']
+    search_fields = ['code', 'name']
+    ordering = ['code']
+
+
+class InstallmentInline(admin.TabularInline):
+    model = Installment
+    extra = 0
+    readonly_fields = ['seq_no', 'due_date', 'amount', 'paid_amount', 'status']
+    can_delete = False
+
+
+@admin.register(Contract)
+class ContractAdmin(admin.ModelAdmin):
+    list_display = ['code', 'customer', 'unit', 'unit_value', 'installments_count', 'created_at']
+    list_filter = ['schedule_type', 'created_at']
+    search_fields = ['code', 'customer__name', 'unit__code']
+    inlines = [InstallmentInline]
+    ordering = ['-created_at']
+
+
+@admin.register(Installment)
+class InstallmentAdmin(admin.ModelAdmin):
+    list_display = ['contract', 'seq_no', 'due_date', 'amount', 'paid_amount', 'status_colored']
+    list_filter = ['status', 'due_date']
+    search_fields = ['contract__code', 'contract__customer__name']
+    ordering = ['contract', 'seq_no']
+    
+    def status_colored(self, obj):
+        colors = {
+            'PAID': 'green',
+            'LATE': 'red',
+            'PENDING': 'orange'
+        }
+        return format_html(
+            '<span style="color: {};">{}</span>',
+            colors.get(obj.status, 'black'),
+            obj.get_status_display()
+        )
+    status_colored.short_description = 'الحالة'
+
+
+@admin.register(ReceiptVoucher)
+class ReceiptVoucherAdmin(admin.ModelAdmin):
+    list_display = ['voucher_number', 'date', 'amount', 'safe', 'customer', 'created_at']
+    list_filter = ['date', 'safe', 'created_at']
+    search_fields = ['voucher_number', 'description', 'customer__name']
+    ordering = ['-date', '-created_at']
+
+
+@admin.register(PaymentVoucher)
+class PaymentVoucherAdmin(admin.ModelAdmin):
+    list_display = ['voucher_number', 'date', 'amount', 'safe', 'supplier', 'project', 'created_at']
+    list_filter = ['date', 'safe', 'project', 'created_at']
+    search_fields = ['voucher_number', 'description', 'supplier__name', 'expense_head']
+    ordering = ['-date', '-created_at']
+
+
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ['code', 'name', 'project_type', 'status', 'budget', 'start_date']
+    list_filter = ['project_type', 'status', 'start_date']
+    search_fields = ['code', 'name']
+    ordering = ['-start_date']
+
+
+@admin.register(Item)
+class ItemAdmin(admin.ModelAdmin):
+    list_display = ['code', 'name', 'uom', 'unit_price', 'supplier', 'created_at']
+    list_filter = ['supplier', 'created_at']
+    search_fields = ['code', 'name']
+    ordering = ['code']
+
+
+@admin.register(StockMove)
+class StockMoveAdmin(admin.ModelAdmin):
+    list_display = ['item', 'direction', 'qty', 'project', 'date', 'created_at']
+    list_filter = ['direction', 'date', 'project']
+    search_fields = ['item__name', 'item__code', 'notes']
+    ordering = ['-date', '-created_at']
+
+
+@admin.register(Settlement)
+class SettlementAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'period_from', 'period_to', 'project', 'created_at']
+    list_filter = ['project', 'created_at']
+    search_fields = ['notes']
+    ordering = ['-period_to', '-created_at']
+    readonly_fields = ['pre_balances', 'post_balances', 'details']

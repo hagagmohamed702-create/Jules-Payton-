@@ -1,0 +1,1 @@
+# تم نقل StockMove إلى items_store.py لتجنب الاستيراد الدائري
