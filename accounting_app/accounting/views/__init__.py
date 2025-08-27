@@ -1,14 +1,1 @@
-from .dashboard import dashboard
-from .partners import *
-from .safes import *
-from .customers import *
-from .contracts import *
-from .units import *
-from .suppliers import *
-from .installments import *
-from .projects import *
-from .inventory import *
-from .settlements import *
-from .vouchers import *
-from .reports import *
-from .notifications import *
+# re-exports intentionally removed to avoid circular imports

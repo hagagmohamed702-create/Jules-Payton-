@@ -1,1 +1,1 @@
-# Services package
+from .treasury import TreasuryService

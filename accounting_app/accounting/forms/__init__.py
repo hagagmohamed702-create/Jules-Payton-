@@ -1,1 +1,6 @@
-# Forms package
+from .partners import (
+    PartnerForm,
+    PartnersGroupForm,
+    PartnersGroupMemberForm,
+    PartnersGroupMemberFormSet,
+)
