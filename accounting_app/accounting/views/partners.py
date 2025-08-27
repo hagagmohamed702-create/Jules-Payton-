@@ -6,7 +6,7 @@ from django.views.decorators.http import require_http_methods
 from django.template.loader import render_to_string
 from django.db.models import Q
 from ..models import Partner, PartnersGroup, PartnersGroupMember
-from ..forms import PartnerForm, PartnersGroupForm, PartnersGroupMemberFormSet
+from ..forms.partners import PartnerForm, PartnersGroupForm, PartnersGroupMemberFormSet
 from ..services import TreasuryService
 
 

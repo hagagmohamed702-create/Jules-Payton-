@@ -6,7 +6,7 @@ from django.views.decorators.http import require_http_methods
 from django.template.loader import render_to_string
 from django.db.models import Q
 from ..models import Safe
-from ..forms import SafeForm
+from ..forms.safes import SafeForm
 from ..services import TreasuryService
 
 

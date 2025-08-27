@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 from django.db.models import Q, Sum
 from decimal import Decimal
 from ..models import Customer, Contract, Installment, ReceiptVoucher
-from ..forms import CustomerForm
+from ..forms.customers import CustomerForm
 from ..services import InstallmentService
 
 
