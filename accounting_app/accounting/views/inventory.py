@@ -6,7 +6,6 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from ..models import Item, StockMove, Supplier, Project
-from ..forms.inventory import ItemForm, StockMoveForm
 
 
 def item_list(request):
@@ -117,6 +116,8 @@ def item_detail(request, pk):
 @require_http_methods(["GET", "POST"])
 def item_create(request):
     """إنشاء صنف جديد"""
+    from ..forms.inventory import ItemForm
+    
     if request.method == 'POST':
         form = ItemForm(request.POST)
         if form.is_valid():
@@ -139,6 +140,8 @@ def item_create(request):
 @require_http_methods(["GET", "POST"])
 def item_update(request, pk):
     """تعديل صنف"""
+    from ..forms.inventory import ItemForm
+    
     item = get_object_or_404(Item, pk=pk)
     
     if request.method == 'POST':
@@ -181,6 +184,8 @@ def item_delete(request, pk):
 @require_http_methods(["GET", "POST"])
 def stock_in(request):
     """إدخال مخزون"""
+    from ..forms.inventory import StockMoveForm
+    
     if request.method == 'POST':
         form = StockMoveForm(request.POST, move_type='in')
         if form.is_valid():
@@ -215,6 +220,8 @@ def stock_in(request):
 @require_http_methods(["GET", "POST"])
 def stock_out(request):
     """إخراج مخزون"""
+    from ..forms.inventory import StockMoveForm
+    
     if request.method == 'POST':
         form = StockMoveForm(request.POST, move_type='out')
         if form.is_valid():

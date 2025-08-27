@@ -6,7 +6,6 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from ..models import ReceiptVoucher, PaymentVoucher, Safe, Customer, Supplier, Contract, Project
-from ..forms.vouchers import ReceiptVoucherForm, PaymentVoucherForm
 from ..services.voucher_service import VoucherService
 
 
@@ -125,6 +124,8 @@ def voucher_detail(request, voucher_type, pk):
 @require_http_methods(["GET", "POST"])
 def receipt_voucher_create(request):
     """إنشاء سند قبض"""
+    from ..forms.vouchers import ReceiptVoucherForm
+    
     if request.method == 'POST':
         form = ReceiptVoucherForm(request.POST)
         if form.is_valid():
@@ -170,6 +171,8 @@ def receipt_voucher_create(request):
 @require_http_methods(["GET", "POST"])
 def payment_voucher_create(request):
     """إنشاء سند صرف"""
+    from ..forms.vouchers import PaymentVoucherForm
+    
     if request.method == 'POST':
         form = PaymentVoucherForm(request.POST)
         if form.is_valid():

@@ -6,7 +6,6 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from ..models import Project, PaymentVoucher, StockMove
-from ..forms.projects import ProjectForm, ProjectExpenseForm
 
 
 def project_list(request):
@@ -122,6 +121,8 @@ def project_detail(request, pk):
 @require_http_methods(["GET", "POST"])
 def project_create(request):
     """إنشاء مشروع جديد"""
+    from ..forms.projects import ProjectForm
+    
     if request.method == 'POST':
         form = ProjectForm(request.POST)
         if form.is_valid():
@@ -144,6 +145,8 @@ def project_create(request):
 @require_http_methods(["GET", "POST"])
 def project_update(request, pk):
     """تعديل مشروع"""
+    from ..forms.projects import ProjectForm
+    
     project = get_object_or_404(Project, pk=pk)
     
     if request.method == 'POST':
@@ -212,6 +215,8 @@ def project_change_status(request, pk):
 @require_http_methods(["GET", "POST"])
 def project_add_expense(request, pk):
     """إضافة مصروف للمشروع"""
+    from ..forms.projects import ProjectExpenseForm
+    
     project = get_object_or_404(Project, pk=pk)
     
     if request.method == 'POST':

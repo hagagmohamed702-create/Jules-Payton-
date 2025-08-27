@@ -5,7 +5,6 @@ from django.db.models import Q, Count, Sum
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from ..models import Unit, Partner, PartnersGroup
-from ..forms.units import UnitForm
 
 
 def unit_list(request):
@@ -103,6 +102,8 @@ def unit_detail(request, pk):
 @require_http_methods(["GET", "POST"])
 def unit_create(request):
     """إنشاء وحدة جديدة"""
+    from ..forms.units import UnitForm
+    
     if request.method == 'POST':
         form = UnitForm(request.POST)
         if form.is_valid():
@@ -126,6 +127,8 @@ def unit_create(request):
 @require_http_methods(["GET", "POST"])
 def unit_update(request, pk):
     """تعديل وحدة"""
+    from ..forms.units import UnitForm
+    
     unit = get_object_or_404(Unit, pk=pk)
     
     # التحقق من وجود عقود

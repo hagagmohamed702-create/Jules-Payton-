@@ -5,7 +5,6 @@ from django.db.models import Q, Count, Sum
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from ..models import Supplier
-from ..forms.suppliers import SupplierForm
 
 
 def supplier_list(request):
@@ -99,6 +98,8 @@ def supplier_detail(request, pk):
 @require_http_methods(["GET", "POST"])
 def supplier_create(request):
     """إنشاء مورد جديد"""
+    from ..forms.suppliers import SupplierForm
+    
     if request.method == 'POST':
         form = SupplierForm(request.POST)
         if form.is_valid():
@@ -121,6 +122,8 @@ def supplier_create(request):
 @require_http_methods(["GET", "POST"])
 def supplier_update(request, pk):
     """تعديل مورد"""
+    from ..forms.suppliers import SupplierForm
+    
     supplier = get_object_or_404(Supplier, pk=pk)
     
     if request.method == 'POST':

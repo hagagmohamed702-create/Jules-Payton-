@@ -6,7 +6,6 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from ..models import Settlement, Partner, PartnersGroup
-from ..forms.settlements import SettlementForm
 from ..services.settlement_service import SettlementService
 
 
@@ -95,6 +94,8 @@ def settlement_detail(request, pk):
 @require_http_methods(["GET", "POST"])
 def settlement_create(request):
     """إنشاء تسوية يدوية"""
+    from ..forms.settlements import SettlementForm
+    
     if request.method == 'POST':
         form = SettlementForm(request.POST)
         if form.is_valid():

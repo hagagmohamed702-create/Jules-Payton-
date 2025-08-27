@@ -7,7 +7,6 @@ from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from datetime import timedelta
 from ..models import Installment, Contract, ReceiptVoucher
-from ..forms.installments import InstallmentPaymentForm
 from ..services.installment_service import InstallmentService
 
 
@@ -139,6 +138,8 @@ def installment_detail(request, pk):
 @require_http_methods(["GET", "POST"])
 def installment_payment(request, pk):
     """تسديد قسط"""
+    from ..forms.installments import InstallmentPaymentForm
+    
     installment = get_object_or_404(
         Installment.objects.select_related('contract__customer'),
         pk=pk
