@@ -1,0 +1,26 @@
+<!-- مكون شريط البحث مع HTMX -->
+<div class="relative">
+    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+    </div>
+    <input type="search"
+           name="search"
+           id="{{ id|default:'search' }}"
+           placeholder="{{ placeholder|default:'بحث...' }}"
+           value="{{ value }}"
+           class="block w-full pr-10 pl-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+           hx-get="{{ url }}"
+           hx-trigger="keyup changed delay:300ms"
+           hx-target="{{ target|default:'#results' }}"
+           hx-indicator="#search-spinner"
+           {% if push_url %}hx-push-url="true"{% endif %}
+    >
+    <div id="search-spinner" class="htmx-indicator absolute inset-y-0 left-0 pl-3 flex items-center">
+        <svg class="animate-spin h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+    </div>
+</div>

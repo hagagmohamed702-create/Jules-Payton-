@@ -1,1 +1,1 @@
-# Accounting app tests
+# Tests package
