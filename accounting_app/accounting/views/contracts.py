@@ -7,7 +7,6 @@ from django.template.loader import render_to_string
 from django.db.models import Q, Sum, Count
 from decimal import Decimal
 from ..models import Contract, Unit, Customer, Installment
-from ..forms.contracts import ContractForm
 from ..services import ContractService
 
 
@@ -59,6 +58,8 @@ def contracts_list(request):
 @login_required
 def contract_create_wizard(request):
     """معالج إنشاء عقد جديد"""
+    from ..forms.contracts import ContractForm
+    
     if request.method == 'POST':
         step = request.POST.get('step', '1')
         
@@ -174,6 +175,8 @@ def contract_create_wizard(request):
 @require_http_methods(["GET", "POST"])
 def contract_edit(request, pk):
     """تعديل عقد"""
+    from ..forms.contracts import ContractForm
+    
     contract = get_object_or_404(Contract, pk=pk)
     
     if request.method == 'POST':

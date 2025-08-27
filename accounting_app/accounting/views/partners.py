@@ -6,7 +6,6 @@ from django.views.decorators.http import require_http_methods
 from django.template.loader import render_to_string
 from django.db.models import Q
 from ..models import Partner, PartnersGroup, PartnersGroupMember
-from ..forms.partners import PartnerForm, PartnersGroupForm, PartnersGroupMemberFormSet
 from ..services import TreasuryService
 
 
@@ -44,6 +43,8 @@ def partners_list(request):
 @require_http_methods(["GET", "POST"])
 def partner_create(request):
     """إنشاء شريك جديد"""
+    from ..forms.partners import PartnerForm
+    
     if request.method == 'POST':
         form = PartnerForm(request.POST)
         if form.is_valid():
@@ -75,6 +76,8 @@ def partner_create(request):
 @require_http_methods(["GET", "POST"])
 def partner_edit(request, pk):
     """تعديل شريك"""
+    from ..forms.partners import PartnerForm
+    
     partner = get_object_or_404(Partner, pk=pk)
     
     if request.method == 'POST':
@@ -176,6 +179,8 @@ def groups_list(request):
 @require_http_methods(["GET", "POST"])
 def group_create(request):
     """إنشاء مجموعة شركاء"""
+    from ..forms.partners import PartnersGroupForm, PartnersGroupMemberFormSet
+    
     if request.method == 'POST':
         form = PartnersGroupForm(request.POST)
         formset = PartnersGroupMemberFormSet(request.POST)
@@ -210,6 +215,8 @@ def group_create(request):
 @require_http_methods(["GET", "POST"])
 def group_edit(request, pk):
     """تعديل مجموعة شركاء"""
+    from ..forms.partners import PartnersGroupForm, PartnersGroupMemberFormSet
+    
     group = get_object_or_404(PartnersGroup, pk=pk)
     
     if request.method == 'POST':
