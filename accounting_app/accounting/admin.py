@@ -1,11 +1,18 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import (
-    Partner, PartnersGroup, PartnersGroupMember,
-    Safe, Customer, Supplier, Unit, Contract,
-    Installment, ReceiptVoucher, PaymentVoucher,
-    Project, Item, StockMove, Settlement
-)
+
+# Import models directly to ensure they're loaded
+from accounting.models.partners import Partner, PartnersGroup, PartnersGroupMember
+from accounting.models.safes import Safe
+from accounting.models.customers import Customer
+from accounting.models.suppliers import Supplier
+from accounting.models.units import Unit
+from accounting.models.contracts import Contract
+from accounting.models.installments import Installment
+from accounting.models.vouchers import ReceiptVoucher, PaymentVoucher
+from accounting.models.projects import Project
+from accounting.models.items_store import Item, StockMove
+from accounting.models.settlements import Settlement
 
 
 @admin.register(Partner)
@@ -53,7 +60,7 @@ class SupplierAdmin(admin.ModelAdmin):
 @admin.register(Unit)
 class UnitAdmin(admin.ModelAdmin):
     list_display = ['code', 'name', 'unit_type', 'price_total', 'is_sold', 'created_at']
-    list_filter = ['unit_type', 'is_sold', 'group', 'created_at']
+    list_filter = ['unit_type', 'is_sold', 'created_at']
     search_fields = ['code', 'name']
     ordering = ['code']
 

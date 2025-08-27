@@ -8,7 +8,7 @@ class Installment(models.Model):
     """نموذج الأقساط"""
     
     contract = models.ForeignKey(
-        'contracts.Contract',
+        'accounting.Contract',
         on_delete=models.CASCADE,
         related_name='installments',
         verbose_name="العقد"

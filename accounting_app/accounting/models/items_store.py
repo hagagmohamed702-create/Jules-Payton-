@@ -27,7 +27,7 @@ class Item(models.Model):
         verbose_name="سعر الوحدة"
     )
     supplier = models.ForeignKey(
-        'suppliers.Supplier',
+        'accounting.Supplier',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -82,7 +82,7 @@ class StockMove(models.Model):
         verbose_name="الصنف"
     )
     project = models.ForeignKey(
-        'projects.Project',
+        'accounting.Project',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

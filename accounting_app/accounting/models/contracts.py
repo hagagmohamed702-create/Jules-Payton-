@@ -21,13 +21,13 @@ class Contract(models.Model):
         verbose_name="كود العقد"
     )
     customer = models.ForeignKey(
-        'customers.Customer',
+        'accounting.Customer',
         on_delete=models.PROTECT,
         related_name='contracts',
         verbose_name="العميل"
     )
     unit = models.OneToOneField(
-        'units.Unit',
+        'accounting.Unit',
         on_delete=models.PROTECT,
         related_name='contract',
         verbose_name="الوحدة"
@@ -59,7 +59,7 @@ class Contract(models.Model):
         verbose_name="تاريخ البداية"
     )
     partners_group = models.ForeignKey(
-        'partners.PartnersGroup',
+        'accounting.PartnersGroup',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
