@@ -1,1 +1,1 @@
-from .treasury import TreasuryService
+from .treasury import TreasuryService  # re-export for legacy imports

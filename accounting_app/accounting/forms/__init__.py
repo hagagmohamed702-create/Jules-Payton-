@@ -4,3 +4,4 @@ from .partners import (
     PartnersGroupMemberForm,
     PartnersGroupMemberFormSet,
 )
+from .safes import SafeForm
