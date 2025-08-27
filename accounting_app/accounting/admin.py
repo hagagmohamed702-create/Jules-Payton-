@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from django.utils.timezone import now
 
 # Import models directly to ensure they're loaded
 from accounting.models.partners import Partner, PartnersGroup, PartnersGroupMember
@@ -13,6 +14,29 @@ from accounting.models.vouchers import ReceiptVoucher, PaymentVoucher
 from accounting.models.projects import Project
 from accounting.models.items_store import Item, StockMove
 from accounting.models.settlements import Settlement
+
+
+# Custom filter for Installment status
+class InstallmentStatusFilter(admin.SimpleListFilter):
+    title = 'Status'
+    parameter_name = 'status'
+
+    def lookups(self, request, model_admin):
+        return [
+            ('paid', 'Paid'),
+            ('due', 'Due'),
+            ('overdue', 'Overdue'),
+        ]
+
+    def queryset(self, request, queryset):
+        today = now().date()
+        if self.value() == 'paid':
+            return queryset.filter(is_paid=True)
+        if self.value() == 'due':
+            return queryset.filter(is_paid=False, due_date__gte=today)
+        if self.value() == 'overdue':
+            return queryset.filter(is_paid=False, due_date__lt=today)
+        return queryset
 
 
 @admin.register(Partner)
@@ -68,8 +92,16 @@ class UnitAdmin(admin.ModelAdmin):
 class InstallmentInline(admin.TabularInline):
     model = Installment
     extra = 0
-    readonly_fields = ['seq_no', 'due_date', 'amount', 'paid_amount', 'status']
+    readonly_fields = ('seq_no', 'due_date', 'amount', 'paid_amount', 'is_paid', 'status')
     can_delete = False
+
+    def status(self, obj):
+        if obj.is_paid:
+            return 'Paid'
+        if obj.due_date and obj.due_date < now().date():
+            return 'Overdue'
+        return 'Due'
+    status.short_description = 'Status'
 
 
 @admin.register(Contract)
@@ -84,20 +116,29 @@ class ContractAdmin(admin.ModelAdmin):
 @admin.register(Installment)
 class InstallmentAdmin(admin.ModelAdmin):
     list_display = ['contract', 'seq_no', 'due_date', 'amount', 'paid_amount', 'status_colored']
-    list_filter = ['status', 'due_date']
+    list_filter = [InstallmentStatusFilter, 'due_date']
     search_fields = ['contract__code', 'contract__customer__name']
     ordering = ['contract', 'seq_no']
     
     def status_colored(self, obj):
-        colors = {
-            'PAID': 'green',
-            'LATE': 'red',
-            'PENDING': 'orange'
-        }
+        # Determine status based on is_paid and due_date
+        if obj.is_paid:
+            status = 'PAID'
+            color = 'green'
+            display = 'مدفوع'
+        elif obj.due_date and obj.due_date < now().date():
+            status = 'LATE'
+            color = 'red'
+            display = 'متأخر'
+        else:
+            status = 'PENDING'
+            color = 'orange'
+            display = 'معلق'
+            
         return format_html(
             '<span style="color: {};">{}</span>',
-            colors.get(obj.status, 'black'),
-            obj.get_status_display()
+            color,
+            display
         )
     status_colored.short_description = 'الحالة'
 
