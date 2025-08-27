@@ -6,7 +6,7 @@ from decimal import Decimal
 class Settlement(models.Model):
     """نموذج التسويات بين الشركاء"""
     project = models.ForeignKey(
-        'projects.Project',
+        'accounting.Project',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

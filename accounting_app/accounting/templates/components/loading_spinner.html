@@ -1,0 +1,16 @@
+<!-- مكون مؤشر التحميل -->
+<div class="htmx-indicator" id="{{ spinner_id|default:'loading-spinner' }}">
+    <div class="flex justify-center items-center p-4">
+        <div class="relative">
+            <div class="animate-spin rounded-full h-{{ size|default:'12' }} w-{{ size|default:'12' }} border-b-2 border-{{ color|default:'blue' }}-600"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <svg class="h-{{ icon_size|default:'6' }} w-{{ icon_size|default:'6' }} text-{{ color|default:'blue' }}-600" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+            </div>
+        </div>
+        {% if text %}
+        <span class="mr-3 text-{{ text_color|default:'gray' }}-600">{{ text }}</span>
+        {% endif %}
+    </div>
+</div>

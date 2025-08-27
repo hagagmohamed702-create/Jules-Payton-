@@ -17,7 +17,7 @@ class VoucherBase(models.Model):
         verbose_name="المبلغ"
     )
     safe = models.ForeignKey(
-        'safes.Safe',
+        'accounting.Safe',
         on_delete=models.PROTECT,
         verbose_name="الخزنة/المحفظة"
     )
@@ -53,7 +53,7 @@ class ReceiptVoucher(VoucherBase):
         verbose_name="رقم السند"
     )
     customer = models.ForeignKey(
-        'customers.Customer',
+        'accounting.Customer',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -61,7 +61,7 @@ class ReceiptVoucher(VoucherBase):
         verbose_name="العميل"
     )
     partner = models.ForeignKey(
-        'partners.Partner',
+        'accounting.Partner',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -69,7 +69,7 @@ class ReceiptVoucher(VoucherBase):
         verbose_name="الشريك"
     )
     contract = models.ForeignKey(
-        'contracts.Contract',
+        'accounting.Contract',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -77,7 +77,7 @@ class ReceiptVoucher(VoucherBase):
         verbose_name="العقد"
     )
     installment = models.ForeignKey(
-        'installments.Installment',
+        'accounting.Installment',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -124,7 +124,7 @@ class PaymentVoucher(VoucherBase):
         verbose_name="رقم السند"
     )
     supplier = models.ForeignKey(
-        'suppliers.Supplier',
+        'accounting.Supplier',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -132,7 +132,7 @@ class PaymentVoucher(VoucherBase):
         verbose_name="المورد"
     )
     project = models.ForeignKey(
-        'projects.Project',
+        'accounting.Project',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

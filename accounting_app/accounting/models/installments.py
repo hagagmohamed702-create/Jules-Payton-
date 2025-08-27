@@ -7,42 +7,35 @@ from datetime import date
 class Installment(models.Model):
     """نموذج الأقساط"""
     
-    STATUS_CHOICES = [
-        ('PENDING', 'معلق'),
-        ('LATE', 'متأخر'),
-        ('PAID', 'مدفوع'),
-    ]
-    
     contract = models.ForeignKey(
-        'contracts.Contract',
+        'accounting.Contract',
         on_delete=models.CASCADE,
         related_name='installments',
         verbose_name="العقد"
-    )
-    seq_no = models.PositiveIntegerField(
-        verbose_name="رقم القسط"
     )
     due_date = models.DateField(
         verbose_name="تاريخ الاستحقاق"
     )
     amount = models.DecimalField(
-        max_digits=15,
+        max_digits=12,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal('0.01'))],
-        verbose_name="قيمة القسط"
+        verbose_name="المبلغ"
+    )
+    is_paid = models.BooleanField(
+        default=False,
+        verbose_name="مدفوع"
+    )
+    
+    # الحقول الإضافية من النموذج الأصلي
+    seq_no = models.PositiveIntegerField(
+        verbose_name="رقم القسط"
     )
     paid_amount = models.DecimalField(
-        max_digits=15,
+        max_digits=12,
         decimal_places=2,
         default=Decimal('0'),
         validators=[MinValueValidator(Decimal('0'))],
         verbose_name="المبلغ المدفوع"
-    )
-    status = models.CharField(
-        max_length=10,
-        choices=STATUS_CHOICES,
-        default='PENDING',
-        verbose_name="الحالة"
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -61,11 +54,10 @@ class Installment(models.Model):
         indexes = [
             models.Index(fields=['contract', 'seq_no']),
             models.Index(fields=['due_date']),
-            models.Index(fields=['status']),
         ]
 
     def __str__(self):
-        return f"قسط {self.seq_no} - عقد {self.contract.code}"
+        return f"Installment #{self.id} - {self.amount}"
     
     def update_status(self):
         """تحديث حالة القسط"""
@@ -108,3 +100,42 @@ class Installment(models.Model):
             due_date__gte=date.today(),
             status='PENDING'
         ).select_related('contract', 'contract__customer')
+
+
+class InstallmentPayment(models.Model):
+    """نموذج المدفوعات الخاصة بالأقساط"""
+    
+    installment = models.ForeignKey(
+        Installment,
+        on_delete=models.CASCADE,
+        related_name='payments',
+        verbose_name="القسط"
+    )
+    paid_on = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="تاريخ الدفع"
+    )
+    amount = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        verbose_name="المبلغ المدفوع"
+    )
+    method = models.CharField(
+        max_length=50,
+        default='cash',
+        verbose_name="طريقة الدفع"
+    )
+    note = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+        verbose_name="ملاحظة"
+    )
+
+    class Meta:
+        verbose_name = "دفعة قسط"
+        verbose_name_plural = "دفعات الأقساط"
+        ordering = ['-paid_on']
+
+    def __str__(self):
+        return f"Payment {self.amount} for installment {self.installment.id}"

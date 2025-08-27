@@ -7,7 +7,7 @@ from ..models import (
     ReceiptVoucher, PaymentVoucher, Installment,
     Contract, Customer, Unit, Project
 )
-from ..services import TreasuryService
+from ..services.treasury import TreasuryService
 
 
 @login_required
@@ -114,3 +114,7 @@ def dashboard_view(request):
     }
     
     return render(request, 'accounting/dashboard.html', context)
+
+
+# Export alias to keep old imports working if any
+dashboard = dashboard_view

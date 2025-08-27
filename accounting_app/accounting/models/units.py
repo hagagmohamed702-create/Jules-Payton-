@@ -52,7 +52,7 @@ class Unit(models.Model):
         verbose_name="المجموعة"
     )
     partners_group = models.ForeignKey(
-        'partners.PartnersGroup',
+        'accounting.PartnersGroup',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

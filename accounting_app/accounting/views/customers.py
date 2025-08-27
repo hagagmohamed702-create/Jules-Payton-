@@ -7,7 +7,6 @@ from django.template.loader import render_to_string
 from django.db.models import Q, Sum
 from decimal import Decimal
 from ..models import Customer, Contract, Installment, ReceiptVoucher
-from ..forms import CustomerForm
 from ..services import InstallmentService
 
 
@@ -55,6 +54,8 @@ def customers_list(request):
 @require_http_methods(["GET", "POST"])
 def customer_create(request):
     """إنشاء عميل جديد"""
+    from ..forms.customers import CustomerForm
+    
     if request.method == 'POST':
         form = CustomerForm(request.POST)
         if form.is_valid():
@@ -89,6 +90,8 @@ def customer_create(request):
 @require_http_methods(["GET", "POST"])
 def customer_edit(request, pk):
     """تعديل عميل"""
+    from ..forms.customers import CustomerForm
+    
     customer = get_object_or_404(Customer, pk=pk)
     
     if request.method == 'POST':

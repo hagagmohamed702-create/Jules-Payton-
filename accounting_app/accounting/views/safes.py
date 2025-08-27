@@ -6,7 +6,6 @@ from django.views.decorators.http import require_http_methods
 from django.template.loader import render_to_string
 from django.db.models import Q
 from ..models import Safe
-from ..forms import SafeForm
 from ..services import TreasuryService
 
 
@@ -54,6 +53,8 @@ def safes_list(request):
 @require_http_methods(["GET", "POST"])
 def safe_create(request):
     """إنشاء خزنة/محفظة جديدة"""
+    from ..forms.safes import SafeForm
+    
     if request.method == 'POST':
         form = SafeForm(request.POST)
         if form.is_valid():
@@ -89,6 +90,8 @@ def safe_create(request):
 @require_http_methods(["GET", "POST"])
 def safe_edit(request, pk):
     """تعديل خزنة/محفظة"""
+    from ..forms.safes import SafeForm
+    
     safe = get_object_or_404(Safe, pk=pk)
     
     if request.method == 'POST':
